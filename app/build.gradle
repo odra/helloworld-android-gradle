@@ -55,5 +55,5 @@ dependencies {
     androidTestCompile 'com.squareup.okhttp:mockwebserver:2.4.0'
 
     compile 'com.feedhenry:fh-android-sdk:3.1.0'
-    compile 'com.android.support:appcompat-v7:24.0.2'
+    compile 'com.android.support:appcompat-v7:24.0.0'
 }
