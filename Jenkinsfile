@@ -6,6 +6,7 @@ node('android') {
     checkout scm
 
     stage 'Build'
+		sh 'env | grep FH_' 
     sh "./gradlew clean assembleDebug"
 
     stage 'Archive'
