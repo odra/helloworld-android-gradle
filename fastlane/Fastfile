@@ -1,0 +1,26 @@
+# More documentation about how to customize your build
+# can be found here:
+# https://docs.fastlane.tools
+fastlane_version "1.109.0"
+
+default_platform :android
+
+lane :build do
+  gradle(task: "clean")
+	gradle(task: "assembleRelease")
+end
+
+lane :sign do |options|
+  sign_apk(
+    alias: "dummyalias",
+    storepass: "android",
+    keystore_path: "${HOME}/android-sdk-linux/android.debug",
+    tsa: "http://timestamp.comodoca.com/rfc316",
+    signed_apk_path: "app/build/outputs/apk/app-release-unsigned.apk",
+    keypass: "android"
+  )
+end
+
+lane :publish do
+  supply(track: "beta")
+end
