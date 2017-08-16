@@ -5,22 +5,34 @@ fastlane_version "1.109.0"
 
 default_platform :android
 
-lane :build do
-  gradle(task: "clean")
-	gradle(task: "assembleRelease")
+lane :build do |options|
+  if options[:clean]
+		gradle(task: "clean")
+	end
+
+	if options[:type] == "debug" or !options[:type]
+	  gradle(task: "assembleDebug")
+	else
+		gradle(task: "assembleRelease")
+	end
 end
 
 lane :sign do |options|
   sign_apk(
-    alias: "dummyalias",
-    storepass: "android",
+    alias: options[:alias],
+    storepass: options[:storepass],
     keystore_path: "${HOME}/android-sdk-linux/android.debug",
     tsa: "http://timestamp.comodoca.com/rfc316",
-    signed_apk_path: "app/build/outputs/apk/app-release-unsigned.apk",
-    keypass: "android"
+    signed_apk_path: "app/build/outputs/apk/app-release.apk",
+    keypass: options[:keypass]
   )
 end
 
-lane :publish do
-  supply(track: "beta")
+lane :publish do |options|
+  supply(
+    track: "beta",
+    json_key: "fastlane/google.json",
+    package_name: "com.feedhenry.helloworld_android",
+    validate_only: true
+  )
 end
