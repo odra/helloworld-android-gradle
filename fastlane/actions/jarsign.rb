@@ -4,7 +4,7 @@ module Fastlane
       SIGNED_APK_PATH = :SIGNED_APK_PATH
     end
 
-    class SignApkAction < Action
+    class JarsignAction < Action
       def self.run(params)
       
       UI.user_error!("Couldn't find '*release-unsigned.apk' file at path 'app/build/outputs/apk/'") unless params[:apk_path]

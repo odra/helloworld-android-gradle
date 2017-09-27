@@ -1,42 +1,30 @@
 /**
 * Android Jenkinsfile
 */
-node("android"){
+node("android") {
   stage("Checkout"){
     checkout scm
   }
 
-  stage ("Prepare"){
+  stage ("Prepare") {
     writeFile file: 'app/src/main/assets/fhconfig.properties', text: params.FH_CONFIG_CONTENT
+    sh 'gem install fastlane'
   }
 
-  stage("Build"){
+  stage("Build") {
     sh 'chmod +x ./gradlew'
-    if (params.BUILD_CONFIG == 'release') {
-      sh './gradlew clean assembleRelease' // builds app/build/outputs/apk/app-release.apk file
-    } else {
-      sh './gradlew clean assembleDebug' // builds app/build/outputs/apk/app-debug.apk
-    }
+    sh "fastlane build clean:true config:${params.BUILD_CONFIG}"
   }
 
-  stage("Sign"){
+  stage("Sign") {
     if (params.BUILD_CONFIG == 'release') {
-        signAndroidApks (
-            keyStoreId: "${params.BUILD_CREDENTIAL_ID}",
-            keyAlias: "${params.BUILD_CREDENTIAL_ALIAS}",
-            apksToSign: "**/*-unsigned.apk",
-            // uncomment the following line to output the signed APK to a separate directory as described above
-            // signedApkMapping: [ $class: UnsignedApkBuilderDirMapping ],
-            // uncomment the following line to output the signed APK as a sibling of the unsigned APK, as described above, or just omit signedApkMapping
-            // you can override these within the script if necessary
-            // androidHome: '/usr/local/Cellar/android-sdk'
-        )
+        println('Not supported yet!')
     } else {
       println('Debug Build - Using default developer signing key')
     }
   }
 
- stage("Archive"){
+ stage("Archive") {
     if (params.BUILD_CONFIG == 'release') {
         archiveArtifacts artifacts: 'app/build/outputs/apk/app-release.apk', excludes: 'app/build/outputs/apk/*-unaligned.apk'
     } else {

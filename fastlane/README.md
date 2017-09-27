@@ -39,11 +39,6 @@ fastlane build
 fastlane sign
 ```
 
-### publish
-```
-fastlane publish
-```
-
 
 ----
 
